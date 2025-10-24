@@ -1,0 +1,214 @@
+# 1. Movies vs TV Shows
+query1 = """
+SELECT type, COUNT(*) AS count
+FROM netflix
+WHERE type IS NOT NULL AND type != ''
+GROUP BY type;
+"""
+df1 = pd.read_sql(query1, engine)
+df1
+
+# 2. Titles per release year
+query2 = """
+SELECT release_year, COUNT(*) AS count
+FROM netflix
+WHERE release_year IS NOT NULL
+GROUP BY release_year
+ORDER BY release_year;
+"""
+df2 = pd.read_sql(query2, engine)
+df2
+
+# 3. Titles per month_added
+query3 = """
+SELECT month_added, COUNT(*) AS count
+FROM netflix
+WHERE month_added IS NOT NULL
+GROUP BY month_added
+ORDER BY count DESC;
+"""
+df3 = pd.read_sql(query3, engine)
+df3
+
+# 4. Top 10 countries
+query4 = """
+SELECT country, COUNT(*) AS count
+FROM netflix
+WHERE country IS NOT NULL AND country != ''
+GROUP BY country
+ORDER BY count DESC
+LIMIT 10;
+"""
+df4 = pd.read_sql(query4, engine)
+df4
+
+# 5. Co-productions (multiple countries)
+query5 = """
+SELECT COUNT(*) AS co_productions
+FROM netflix
+WHERE country LIKE '%,%';
+"""
+df5 = pd.read_sql(query5, engine)
+df5
+
+# 6. Top 10 genres
+query6 = """
+SELECT listed_in, COUNT(*) AS count
+FROM netflix
+WHERE listed_in IS NOT NULL AND listed_in != ''
+GROUP BY listed_in
+ORDER BY count DESC
+LIMIT 10;
+"""
+df6 = pd.read_sql(query6, engine)
+df6
+
+# 7. Titles with multiple genres
+query7 = """
+SELECT COUNT(*) AS multiple_genres
+FROM netflix
+WHERE listed_in LIKE '%,%';
+"""
+df7 = pd.read_sql(query7, engine)
+df7
+
+# 8. Genre trend per release year
+query8 = """
+SELECT release_year, listed_in, COUNT(*) AS count
+FROM netflix
+WHERE release_year IS NOT NULL AND listed_in IS NOT NULL AND listed_in != ''
+GROUP BY release_year, listed_in
+ORDER BY release_year;
+"""
+df8 = pd.read_sql(query8, engine)
+df8.head(10)
+
+# 9. Titles per rating
+query9 = """
+SELECT rating, COUNT(*) AS count
+FROM netflix
+WHERE rating IS NOT NULL AND rating != ''
+GROUP BY rating
+ORDER BY count DESC;
+"""
+df9 = pd.read_sql(query9, engine)
+df9
+
+# 10. Ratings by type
+query10 = """
+SELECT type, rating, COUNT(*) AS count
+FROM netflix
+WHERE type IS NOT NULL AND type != '' AND rating IS NOT NULL AND rating != ''
+GROUP BY type, rating
+ORDER BY type, count DESC;
+"""
+df10 = pd.read_sql(query10, engine)
+df10.head(10)
+
+# 11. Rating trends over years
+query11 = """
+SELECT release_year, rating, COUNT(*) AS count
+FROM netflix
+WHERE release_year IS NOT NULL AND rating IS NOT NULL AND rating != ''
+GROUP BY release_year, rating
+ORDER BY release_year;
+"""
+df11 = pd.read_sql(query11, engine)
+df11.head(10)
+
+# 12. Average movie duration
+query12 = """
+SELECT AVG(duration_int) AS avg_movie_duration
+FROM netflix
+WHERE type='Movie' AND duration_int IS NOT NULL;
+"""
+df12 = pd.read_sql(query12, engine)
+df12
+
+# 13. Average TV seasons
+query13 = """
+SELECT AVG(duration_int) AS avg_tv_seasons
+FROM netflix
+WHERE type='TV Show' AND duration_int IS NOT NULL;
+"""
+df13 = pd.read_sql(query13, engine)
+df13
+
+# 14. Longest movies
+query14 = """
+SELECT title, duration_int
+FROM netflix
+WHERE type='Movie' AND duration_int IS NOT NULL
+ORDER BY duration_int DESC
+LIMIT 5;
+"""
+df14 = pd.read_sql(query14, engine)
+df14
+
+# 15. Shortest movies
+query15 = """
+SELECT title, duration_int
+FROM netflix
+WHERE type='Movie' AND duration_int IS NOT NULL
+ORDER BY duration_int ASC
+LIMIT 5;
+"""
+df15 = pd.read_sql(query15, engine)
+df15
+
+# 16. Top directors
+query16 = """
+SELECT director, COUNT(*) AS count
+FROM netflix
+WHERE director IS NOT NULL AND director != ''
+GROUP BY director
+ORDER BY count DESC
+LIMIT 10;
+"""
+df16 = pd.read_sql(query16, engine)
+df16
+
+# 17. Most frequent actors (fixed)
+query17 = """
+SELECT "cast", COUNT(*) AS count
+FROM netflix
+WHERE "cast" IS NOT NULL AND "cast" != ''
+GROUP BY "cast"
+ORDER BY count DESC
+LIMIT 10;
+"""
+df17 = pd.read_sql(query17, engine)
+df17
+
+# 18. Top directors per country
+query18 = """
+SELECT country, director, COUNT(*) AS count
+FROM netflix
+WHERE country IS NOT NULL AND country != '' AND director IS NOT NULL AND director != ''
+GROUP BY country, director
+ORDER BY country, count DESC;
+"""
+df18 = pd.read_sql(query18, engine)
+df18.head(10)
+
+# 19. Movies vs TV shows per year
+query19 = """
+SELECT release_year, type, COUNT(*) AS count
+FROM netflix
+WHERE release_year IS NOT NULL AND type IS NOT NULL AND type != ''
+GROUP BY release_year, type
+ORDER BY release_year;
+"""
+df19 = pd.read_sql(query19, engine)
+df19.head(10)
+
+# 20. Titles added per month and year
+query20 = """
+SELECT year_added, month_added, COUNT(*) AS count
+FROM netflix
+WHERE year_added IS NOT NULL AND month_added IS NOT NULL
+GROUP BY year_added, month_added
+ORDER BY year_added, count DESC;
+"""
+df20 = pd.read_sql(query20, engine)
+df20.head(10)
